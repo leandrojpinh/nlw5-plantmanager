@@ -62,6 +62,7 @@ export function UserIdentification() {
                                 <Button
                                     title='Confirmar'
                                     onPress={handleConfirmation}
+                                    disabled={!name}
                                 ></Button>
                             </View>
                         </View>
