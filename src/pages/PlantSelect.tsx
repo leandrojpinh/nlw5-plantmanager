@@ -9,26 +9,17 @@ import fonts from '../styles/fonts';
 import api from '../services/api';
 import { PlantCardPrimary } from '../components/PlantCardPrimary';
 import { Load } from '../components/Load';
+import { useNavigation } from '@react-navigation/core';
+import { PlantProps } from '../libs/storage';
 
 interface EnvironmentProps {
     key: string;
     title: string;
 }
 
-interface PlantProps {
-    id: 1;
-    name: string;
-    about: string;
-    water_tips: string;
-    photo: string;
-    environments: [string]
-    frequency: {
-        times: number
-        repeat_every: string
-    }
-}
-
 export function PlantSelect() {
+    const navigation = useNavigation();
+
     const [environments, setEnvironments] = useState<EnvironmentProps[]>([]);
     const [plants, setPlants] = useState<PlantProps[]>([]);
     const [filteredPlants, setFilteredPlants] = useState<PlantProps[]>([]);
@@ -99,6 +90,10 @@ export function PlantSelect() {
         setPage(oldValue => oldValue + 1);
     }
 
+    function handlePlantSelect(plant: PlantProps) {
+        navigation.navigate('PlantSave', { plant });
+    }
+
     if (loading) {
         return <Load />
     }
@@ -114,6 +109,7 @@ export function PlantSelect() {
 
             <View>
                 <FlatList
+                    keyExtractor={(item) => String(item.key)}
                     data={environments}
                     renderItem={({ item }) => <EnviromentButton
                         title={item.title}
@@ -128,17 +124,18 @@ export function PlantSelect() {
 
             <View style={styles.plants}>
                 <FlatList
+                    keyExtractor={(item) => String(item.id)}
                     data={filteredPlants}
-                    renderItem={({ item }) => <PlantCardPrimary data={item} />}
+                    renderItem={({ item }) => <PlantCardPrimary data={item} onPress={() => handlePlantSelect(item)} />}
                     showsVerticalScrollIndicator={false}
                     numColumns={2}
                     onEndReachedThreshold={0.1}
-                    onEndReached={({ distanceFromEnd }) => 
-                    handleFetchMore(distanceFromEnd)}
+                    onEndReached={({ distanceFromEnd }) =>
+                        handleFetchMore(distanceFromEnd)}
                     ListFooterComponent={
                         loadingMore ?
-                        <ActivityIndicator color={colors.green} />
-                        : <></>
+                            <ActivityIndicator color={colors.green} />
+                            : <></>
                     }
                 />
             </View>

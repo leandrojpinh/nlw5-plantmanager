@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core';
+import { useNavigation, useRoute } from '@react-navigation/core';
 import React from 'react';
 import {
     SafeAreaView, StyleSheet, Text, View
@@ -9,30 +9,52 @@ import { Button } from '../components/Button';
 import colors from '../styles/colors';
 import fonts from '../styles/fonts';
 
+interface ConfirmationProps {
+    title: string;
+    subtitle: string;
+    buttonTitle: string;
+    icon: 'smile'| 'hug';
+    nextScreen: string;
+}
+
+const emojis = {
+    hug: '🤗',
+    smile: '😁'
+}
+
 export function Confirmation() {
     const navigation = useNavigation();
+    const routes = useRoute();
+
+    const {
+        buttonTitle,
+        icon,
+        nextScreen,
+        subtitle,
+        title
+    } = routes.params as ConfirmationProps;
 
     function handleMoveOn() {
-        navigation.navigate('PlantSelect');
+        navigation.navigate(nextScreen);
     }
 
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
                 <Text style={styles.emoji}>
-                    😄
+                    {emojis[icon]}
                 </Text>
 
                 <Text style={styles.title}>
-                    Prontinho
+                    {title}
                 </Text>
 
                 <Text style={styles.subtitle}>
-                    Agora vamos começar a cuidar das suas platinhas com muito cuidado.
+                    {subtitle}
                 </Text>
 
                 <View style={styles.footer}>
-                    <Button title='Começar' onPress={handleMoveOn} />
+                    <Button title={buttonTitle} onPress={handleMoveOn} />
                 </View>
             </View>
         </SafeAreaView>
