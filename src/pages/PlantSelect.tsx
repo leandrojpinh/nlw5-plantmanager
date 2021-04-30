@@ -64,7 +64,7 @@ export function PlantSelect() {
         }
 
         fetchPlants();
-    }, [page]);
+    }, []);
 
     function handleEnvironmentSelected(environment: string) {
         setEnvironmentSelected(environment);
@@ -82,6 +82,7 @@ export function PlantSelect() {
     }
 
     function handleFetchMore(distance: number) {
+        console.log('page', page)
         if (distance < 1) {
             return;
         }
